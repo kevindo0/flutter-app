@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:new_chain/third/native.dart';
 
 void main() {
   runApp(const MyApp());
@@ -58,6 +59,9 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            Text(
+              '8 + $_counter = ${NativeAdd.add(8, _counter)}'
+            )
           ],
         ),
       ),
