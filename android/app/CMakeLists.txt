@@ -1,3 +1,5 @@
 cmake_minimum_required(VERSION 3.4.1)
 
-add_library(native_add SHARED ../../ios/Runner/Classes/native_add.cpp)
+file(GLOB SRC_LIST "../../ios/Runner/Classes/*")
+
+add_library(native_add SHARED ${SRC_LIST})
