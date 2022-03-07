@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:new_chain/ffi/ffi.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:new_chain/third/native.dart';
 
@@ -34,11 +35,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 1;
 
+  var result = "111";
+
   Future<void> _incrementCounter() async {
     var d = await getApplicationDocumentsDirectory();
     debugPrint("good $d");
     setState(() {
       _counter++;
+      result = FFi().runJs("$_counter + 456 + 'Hello js'");
     });
   }
 
@@ -54,6 +58,10 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             const Text(
               'You have pushed the button this many times:',
+            ),
+            Text(
+              result,
+              style: Theme.of(context).textTheme.headline4,
             ),
             Text(
               '$_counter',
