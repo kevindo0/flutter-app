@@ -44,6 +44,109 @@ class NativeLibrary {
   late final _FreeResultPtr =
       _lookup<ffi.NativeFunction<ffi.Void Function(JsResult)>>('FreeResult');
   late final _FreeResult = _FreeResultPtr.asFunction<void Function(JsResult)>();
+
+  int fetch_number() {
+    return _fetch_number();
+  }
+
+  late final _fetch_numberPtr =
+      _lookup<ffi.NativeFunction<ffi.Int32 Function()>>('fetch_number');
+  late final _fetch_number = _fetch_numberPtr.asFunction<int Function()>();
+
+  void api_cgotest() {
+    return _api_cgotest();
+  }
+
+  late final _api_cgotestPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function()>>('api_cgotest');
+  late final _api_cgotest = _api_cgotestPtr.asFunction<void Function()>();
+
+  /// 从文件加载集合数据后进行隐私交求(结果会保存到 params.in+".out" 文件内)
+  ///
+  /// @param[in]  psitype input ePsiDataType算法类型 (暂时无用,传0)
+  /// @param[in]  role input Role (0 - Sender, 1 - Receiver)
+  /// @param[in] ip_port input ip端口 (127.0.0.1:1212)
+  /// @param[in] timeout_sec input 连接超时时间(单位秒, -1表示不限制)
+  /// @param[in] in input data file path(本地路径)
+  /// @param[in]  bTry input 是否try模式
+  /// @return Return ApiRes.m_code(true: 成功, 从ApiRes.m_res取结果;  false: 失败,从ApiRes.m_err取错误消息)
+  ApiRes api_run_psi_file(
+    int psitype,
+    int role,
+    ffi.Pointer<ffi.Int8> ip_port,
+    int timeout_sec,
+    ffi.Pointer<ffi.Int8> in1,
+    int bTry,
+  ) {
+    return _api_run_psi_file(
+      psitype,
+      role,
+      ip_port,
+      timeout_sec,
+      in1,
+      bTry,
+    );
+  }
+
+  late final _api_run_psi_filePtr = _lookup<
+      ffi.NativeFunction<
+          ApiRes Function(
+              ffi.Uint8,
+              ffi.Uint8,
+              ffi.Pointer<ffi.Int8>,
+              ffi.Int64,
+              ffi.Pointer<ffi.Int8>,
+              ffi.Int32)>>('api_run_psi_file');
+  late final _api_run_psi_file = _api_run_psi_filePtr.asFunction<
+      ApiRes Function(
+          int, int, ffi.Pointer<ffi.Int8>, int, ffi.Pointer<ffi.Int8>, int)>();
+
+  /// 从内存加载集合数据后进行隐私交求
+  ///
+  /// @param[in]  psitype input ePsiDataType算法类型 (暂时无用,传0)
+  /// @param[in]  role input Role (0 - Sender, 1 - Receiver)
+  /// @param[in] ip_port input ip端口 (127.0.0.1:1212)
+  /// @param[in] timeout_sec input 连接超时时间(单位秒, -1表示不限制)
+  /// @param[in] buffer[] input  vector's buffer address
+  /// @param[in] num input  vector's buffer num(数组元素个数)
+  /// @param[in]  bTry input 是否try模式
+  /// @return Return ApiRes.m_code(true: 成功, 从ApiRes.m_res取结果;  false: 失败,从ApiRes.m_err取错误消息)
+  ApiRes api_run_psi_mem(
+    ffi.Pointer<ffi.Int8> taskNo,
+    int psitype,
+    int role,
+    ffi.Pointer<ffi.Int8> ip_port,
+    int timeout_sec,
+    ffi.Pointer<ffi.Pointer<ffi.Int8>> buffer,
+    int num,
+    int bTry,
+  ) {
+    return _api_run_psi_mem(
+      taskNo,
+      psitype,
+      role,
+      ip_port,
+      timeout_sec,
+      buffer,
+      num,
+      bTry,
+    );
+  }
+
+  late final _api_run_psi_memPtr = _lookup<
+      ffi.NativeFunction<
+          ApiRes Function(
+              ffi.Pointer<ffi.Int8>,
+              ffi.Uint8,
+              ffi.Uint8,
+              ffi.Pointer<ffi.Int8>,
+              ffi.Int64,
+              ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+              ffi.Uint64,
+              ffi.Int32)>>('api_run_psi_mem');
+  late final _api_run_psi_mem = _api_run_psi_memPtr.asFunction<
+      ApiRes Function(ffi.Pointer<ffi.Int8>, int, int, ffi.Pointer<ffi.Int8>,
+          int, ffi.Pointer<ffi.Pointer<ffi.Int8>>, int, int)>();
 }
 
 class JsResult extends ffi.Struct {
@@ -54,4 +157,36 @@ class JsResult extends ffi.Struct {
 
   @ffi.Int32()
   external int err;
+}
+
+abstract class Role {
+  static const int Sender = 0;
+  static const int Receiver = 1;
+  static const int Invalid = 2;
+}
+
+abstract class FileType {
+  static const int Bin = 0;
+  static const int Csv = 1;
+  static const int Unspecified = 2;
+}
+
+abstract class ePsiDataType {
+  static const int eMpcDataType_kkrt = 0;
+  static const int eMpcDataType_MAX = 1;
+}
+
+class ApiRes extends ffi.Struct {
+  @ffi.Int32()
+  external int m_code;
+
+  external ffi.Pointer<ffi.Int8> m_err;
+
+  @ffi.Int32()
+  external int m_err_len;
+
+  external ffi.Pointer<ffi.Uint64> m_res;
+
+  @ffi.Int32()
+  external int m_res_size;
 }

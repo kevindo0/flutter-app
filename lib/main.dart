@@ -42,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
     debugPrint("good $d");
     setState(() {
       _counter++;
-      result = FFi().runJs("$_counter + 456 + 'Hello js'");
+      FFi().RunPsi();
     });
   }
 

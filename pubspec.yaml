@@ -98,3 +98,4 @@ ffigen:
   headers:
     entry-points:
       - 'lib/ffi/libgo.h'
+      - 'lib/ffi/interface.h'
