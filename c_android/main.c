@@ -7,5 +7,7 @@ int main() {
 	char* cs[] = {"one", "two", "three"};
 	char* c = getChar(cs, 3);
 	printf("res char: %s\n", c);
+	char* n = join("hello", ", world!");
+	printf("new char: %s\n", n);
 	return 0;
 }
